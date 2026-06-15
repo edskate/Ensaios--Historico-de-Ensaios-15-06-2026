@@ -6,3 +6,5 @@
 {"schemaVersion":1,"eventId":"1a1f0d8c-931d-4053-8da7-5cd523796255","runId":"run-61c89ac2-2eb6-49d2-9219-f47970b70770","timestampMs":1781548374591,"source":"router","phase":"complete","commandName":"hygiene.scan","resultKind":"ok","durationMs":58}
 {"schemaVersion":1,"eventId":"36882dfa-c351-44cc-8566-4a6b1948cb83","runId":"run-ca2ba21b-b7e3-4c95-8383-8340ef9ac46e","timestampMs":1781548411037,"source":"router","phase":"start","commandName":"hygiene.scan"}
 {"schemaVersion":1,"eventId":"e7af5d1b-442a-4c0d-98f0-be3034f85fa8","runId":"run-ca2ba21b-b7e3-4c95-8383-8340ef9ac46e","timestampMs":1781548411286,"source":"router","phase":"complete","commandName":"hygiene.scan","resultKind":"ok","durationMs":250}
+{"schemaVersion":1,"eventId":"33f12a7d-65ba-434e-aac9-9d01335a93d0","runId":"run-3e0fccfa-8a75-42df-a548-478b5a84158f","timestampMs":1781548664500,"source":"router","phase":"start","commandName":"hygiene.scan"}
+{"schemaVersion":1,"eventId":"e8bd1ae8-b5c3-4cef-b2ae-d3c4ea4d9794","runId":"run-3e0fccfa-8a75-42df-a548-478b5a84158f","timestampMs":1781548664618,"source":"router","phase":"complete","commandName":"hygiene.scan","resultKind":"ok","durationMs":118}
