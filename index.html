@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎬 Ensaio Maio 2026 com Clip</title>
+
+<style>
+body{margin:0;padding:15px;background:#000;color:#fff;font-family:Arial}
+header,.card{background:#111;border:2px solid gold;border-radius:15px;padding:15px;margin-bottom:15px}
+header{text-align:center}
+h1,h2,label{color:gold}
+.relogio{color:#00ff66;font-size:22px;font-weight:bold}
+input,select,button,video{width:100%;padding:10px;margin:6px 0 12px;border-radius:8px;font-size:16px;box-sizing:border-box}
+button{background:gold;color:#000;font-weight:bold;cursor:pointer;border:none}
+video{background:#000;border:2px solid gold;max-height:380px}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th{background:gold;color:#000;padding:10px}
+td{border:1px solid #555;padding:8px;text-align:center}
+.ok{color:#00ff66;font-weight:bold}
+.alerta{color:red;font-weight:bold}
+.amarelo{color:gold;font-weight:bold}
+.barra{width:100%;height:30px;background:#333;border-radius:20px;overflow:hidden}
+.progresso{height:100%;width:0%;background:linear-gradient(90deg,gold,#00ff66);transition:.3s}
+.print{background:#00ff66}
+.limpar{background:#b00020;color:white}
+@media print{
+button,input,select,video{display:none}
+body{background:white;color:black}
+header,.card{border:1px solid black}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🎬 ENSAIO MAIO 2026</h1>
+<p>Controle de música, clip, marcação de coreografia e histórico</p>
+<div class="relogio" id="relogio"></div>
+</header>
+
+<div class="card">
+<h2>🎬 Adicionar Música ou Clip</h2>
+
+<label>Escolher música ou clip do PC</label>
+<input 
+type="file" 
+id="arquivoMidia"
+accept=".mp3,.wav,.ogg,.m4a,.mp4,.webm,.mov,audio/*,video/*"
+onchange="carregarMidia(event)">
+
+<p>Status: <span id="statusAudio" class="amarelo">Aguardando arquivo</span></p>
+<p>Arquivo: <span id="nomeArquivo" class="amarelo">Nenhum</span></p>
+
+<video id="audio" controls></video>
+
+<p>Tempo atual: <span id="tempoAtual" class="ok">00:00</span></p>
+<p>Duração: <span id="duracaoTotal" class="ok">00:00</span></p>
+<p>Restante: <span id="tempoRestanteAudio" class="alerta">00:00</span></p>
+
+<div class="barra">
+<div id="barraAudio" class="progresso"></div>
+</div>
+
+<button onclick="tocarMusica()">▶️ Tocar Clip</button>
+<button onclick="pausarMusica()">⏸️ Pausar Clip</button>
+<button onclick="reiniciarMusica()">🔁 Reiniciar Clip</button>
+<button onclick="usarTempoDoAudio()">⏱ Usar Tempo do Clip</button>
+
+<hr>
+
+<h2>🎬 Marcação da Coreografia</h2>
+
+<button onclick="tocarEMarcarInicio()">▶️ Tocar e Gravar Início</button>
+<button onclick="pausarEMarcarParada()">⏸️ Pausar e Gravar Parada</button>
+<button onclick="continuarMusica()">▶️ Continuar Clip</button>
+<button onclick="limparMarcacao()">🧹 Limpar Marcação</button>
+
+<p>Início: <span id="inicioMarcado" class="ok">00:00</span></p>
+<p>Parou: <span id="paradaMarcada" class="alerta">00:00</span></p>
+<p>Tempo trabalhado: <span id="tempoTrabalhado" class="amarelo">00:00</span></p>
+</div>
+
+<div class="card">
+<h2>📅 Adicionar Ensaio</h2>
+
+<label>Data</label>
+<select id="dataEnsaio">
+<option>Segunda-feira - 04/05/2026</option>
+<option>Terça-feira - 05/05/2026</option>
+<option>Quarta-feira - 06/05/2026</option>
+<option>Quinta-feira - 07/05/2026</option>
+<option>Sexta-feira - 08/05/2026</option>
+<option>Sábado - 09/05/2026</option>
+<option>Domingo - 10/05/2026</option>
+<option>Segunda-feira - 11/05/2026</option>
+<option>Terça-feira - 12/05/2026</option>
+<option>Quarta-feira - 13/05/2026</option>
+<option>Quinta-feira - 14/05/2026</option>
+<option>Sexta-feira - 15/05/2026</option>
+<option>Sábado - 16/05/2026</option>
+<option>Domingo - 17/05/2026</option>
+<option>Segunda-feira - 18/05/2026</option>
+<option>Terça-feira - 19/05/2026</option>
+<option>Quarta-feira - 20/05/2026</option>
+<option>Quinta-feira - 21/05/2026</option>
+<option>Sexta-feira - 22/05/2026</option>
+<option>Sábado - 23/05/2026</option>
+<option>Domingo - 24/05/2026</option>
+<option>Segunda-feira - 25/05/2026</option>
+<option>Terça-feira - 26/05/2026</option>
+<option>Quarta-feira - 27/05/2026</option>
+<option>Quinta-feira - 28/05/2026</option>
+<option>Sexta-feira - 29/05/2026</option>
+<option>Sábado - 30/05/2026</option>
+<option>Domingo - 31/05/2026</option>
+</select>
+
+<label>Entrada</label>
+<input type="time" id="entrada">
+
+<label>Saída</label>
+<input type="time" id="saida">
+
+<label>Nome da música / clip</label>
+<input type="text" id="musica" placeholder="Nome da música ou clip">
+
+<label>Tempo total da coreografia em minutos</label>
+<input type="number" id="tempoTotal" oninput="atualizarContagem()">
+
+<label>Tempo já feito em minutos</label>
+<input type="number" id="tempoFeito" oninput="atualizarContagem()">
+
+<div class="card">
+<h2>📉 Contagem da Coreografia</h2>
+<p>Total: <span id="tempoMusicaTexto" class="ok">0 min</span></p>
+<p>Feito: <span id="tempoFeitoTexto" class="ok">0 min</span></p>
+<p>Falta: <span id="tempoRestanteTexto" class="alerta">0 min</span></p>
+
+<div class="barra">
+<div id="barraProgresso" class="progresso"></div>
+</div>
+</div>
+
+<button onclick="adicionarEnsaio()">➕ Adicionar Ensaio</button>
+</div>
+
+<div class="card">
+<h2>📋 Histórico dos Ensaios</h2>
+
+<table>
+<thead>
+<tr>
+<th>Data</th>
+<th>Entrada</th>
+<th>Saída</th>
+<th>Música / Clip</th>
+<th>Total</th>
+<th>Feito</th>
+<th>Falta</th>
+<th>Início</th>
+<th>Parou</th>
+<th>Trabalhado</th>
+<th>Status</th>
+<th>Ação</th>
+</tr>
+</thead>
+<tbody id="tabela"></tbody>
+</table>
+</div>
+
+<div class="card">
+<h2>📊 Resumo Geral</h2>
+
+<p>Total de registros: <span id="totalMusicas" class="amarelo">0</span></p>
+<p>Total de coreografia: <span id="totalCoreografia" class="ok">0</span> min</p>
+<p>Total feito: <span id="totalFeito" class="ok">0</span> min</p>
+<p>Total faltando: <span id="totalFalta" class="alerta">0</span> min</p>
+
+<button class="print" onclick="window.print()">🧾 Salvar / Imprimir PDF</button>
+<button class="limpar" onclick="limparTudo()">🗑️ Limpar Histórico</button>
+</div>
+
+<script>
+let ensaios = JSON.parse(localStorage.getItem("ensaiosMaio2026Clip")) || [];
+let inicioCoreografia = 0;
+let paradaCoreografia = 0;
+
+const audio = document.getElementById("audio");
+
+function atualizarRelogio(){
+const agora = new Date();
+document.getElementById("relogio").innerHTML =
+agora.toLocaleDateString("pt-BR") + " - " + agora.toLocaleTimeString("pt-BR");
+}
+setInterval(atualizarRelogio,1000);
+atualizarRelogio();
+
+function carregarMidia(event){
+const arquivo = event.target.files[0];
+
+if(!arquivo){
+document.getElementById("statusAudio").innerText = "Nenhum arquivo escolhido";
+return;
+}
+
+document.getElementById("nomeArquivo").innerText = arquivo.name;
+document.getElementById("statusAudio").innerText = "Carregando clip...";
+
+const leitor = new FileReader();
+
+leitor.onload = function(e){
+audio.src = e.target.result;
+audio.load();
+
+document.getElementById("statusAudio").innerText = "Clip carregado. Aperte PLAY.";
+document.getElementById("musica").value = arquivo.name.replace(/\.[^/.]+$/, "");
+};
+
+leitor.onerror = function(){
+document.getElementById("statusAudio").innerText = "Erro ao carregar o clip.";
+};
+
+leitor.readAsDataURL(arquivo);
+}
+
+function tocarMusica(){
+if(!audio.src){
+alert("Escolha uma música ou clip primeiro.");
+return;
+}
+audio.play().catch(()=>{
+alert("Clique no PLAY do controle do clip.");
+});
+}
+
+function pausarMusica(){
+audio.pause();
+}
+
+function reiniciarMusica(){
+audio.currentTime = 0;
+atualizarAudioTela();
+}
+
+function tocarEMarcarInicio(){
+if(!audio.src){
+alert("Escolha uma música ou clip primeiro.");
+return;
+}
+
+audio.play().then(()=>{
+inicioCoreografia = audio.currentTime || 0;
+
+document.getElementById("inicioMarcado").innerText = formatarTempo(inicioCoreografia);
+document.getElementById("statusAudio").innerText = "Gravando início junto com o clip.";
+
+salvarMarcacao();
+}).catch(()=>{
+alert("Clique no PLAY do controle do clip e tente marcar novamente.");
+});
+}
+
+function pausarEMarcarParada(){
+if(!audio.src){
+alert("Escolha uma música ou clip primeiro.");
+return;
+}
+
+audio.pause();
+
+paradaCoreografia = audio.currentTime || 0;
+
+let trabalhado = paradaCoreografia - inicioCoreografia;
+if(trabalhado < 0){trabalhado = 0;}
+
+document.getElementById("paradaMarcada").innerText = formatarTempo(paradaCoreografia);
+document.getElementById("tempoTrabalhado").innerText = formatarTempo(trabalhado);
+
+document.getElementById("tempoFeito").value = Math.ceil(trabalhado / 60);
+
+document.getElementById("statusAudio").innerText = "Parada gravada no tempo do clip.";
+
+atualizarContagem();
+salvarMarcacao();
+}
+
+function continuarMusica(){
+if(!audio.src){
+alert("Escolha uma música ou clip primeiro.");
+return;
+}
+audio.play();
+}
+
+audio.addEventListener("loadedmetadata", function(){
+document.getElementById("statusAudio").innerText = "Clip pronto para tocar.";
+atualizarAudioTela();
+});
+
+audio.addEventListener("timeupdate", atualizarAudioTela);
+
+audio.addEventListener("ended", function(){
+document.getElementById("statusAudio").innerText = "Clip finalizado.";
+});
+
+audio.addEventListener("error", function(){
+document.getElementById("statusAudio").innerText = "Erro: formato não suportado pelo navegador.";
+});
+
+function atualizarAudioTela(){
+const atual = audio.currentTime || 0;
+const total = audio.duration || 0;
+let restante = total - atual;
+
+if(restante < 0){restante = 0;}
+
+document.getElementById("tempoAtual").innerText = formatarTempo(atual);
+document.getElementById("duracaoTotal").innerText = formatarTempo(total);
+document.getElementById("tempoRestanteAudio").innerText = formatarTempo(restante);
+
+const porcentagem = total > 0 ? (atual / total) * 100 : 0;
+document.getElementById("barraAudio").style.width = porcentagem + "%";
+}
+
+function usarTempoDoAudio(){
+if(!audio.duration || isNaN(audio.duration)){
+alert("Carregue uma música ou clip primeiro.");
+return;
+}
+
+const minutos = Math.ceil(audio.duration / 60);
+document.getElementById("tempoTotal").value = minutos;
+atualizarContagem();
+}
+
+function atualizarContagem(){
+const total = Number(document.getElementById("tempoTotal").value);
+const feito = Number(document.getElementById("tempoFeito").value);
+let falta = total - feito;
+
+if(falta < 0){falta = 0;}
+
+let porcentagem = total > 0 ? (feito / total) * 100 : 0;
+if(porcentagem > 100){porcentagem = 100;}
+
+document.getElementById("tempoMusicaTexto").innerText = total + " min";
+document.getElementById("tempoFeitoTexto").innerText = feito + " min";
+document.getElementById("tempoRestanteTexto").innerText = falta + " min";
+document.getElementById("barraProgresso").style.width = porcentagem + "%";
+}
+
+function salvarMarcacao(){
+localStorage.setItem("marcacaoCoreografiaClip", JSON.stringify({
+inicio: inicioCoreografia,
+parada: paradaCoreografia
+}));
+}
+
+function carregarMarcacao(){
+const salvo = JSON.parse(localStorage.getItem("marcacaoCoreografiaClip"));
+
+if(salvo){
+inicioCoreografia = salvo.inicio || 0;
+paradaCoreografia = salvo.parada || 0;
+
+let trabalhado = paradaCoreografia - inicioCoreografia;
+if(trabalhado < 0){trabalhado = 0;}
+
+document.getElementById("inicioMarcado").innerText = formatarTempo(inicioCoreografia);
+document.getElementById("paradaMarcada").innerText = formatarTempo(paradaCoreografia);
+document.getElementById("tempoTrabalhado").innerText = formatarTempo(trabalhado);
+}
+}
+
+function limparMarcacao(){
+inicioCoreografia = 0;
+paradaCoreografia = 0;
+
+localStorage.removeItem("marcacaoCoreografiaClip");
+
+document.getElementById("inicioMarcado").innerText = "00:00";
+document.getElementById("paradaMarcada").innerText = "00:00";
+document.getElementById("tempoTrabalhado").innerText = "00:00";
+document.getElementById("tempoFeito").value = "";
+
+atualizarContagem();
+}
+
+function adicionarEnsaio(){
+const data = document.getElementById("dataEnsaio").value;
+const entrada = document.getElementById("entrada").value;
+const saida = document.getElementById("saida").value;
+const musica = document.getElementById("musica").value;
+const total = Number(document.getElementById("tempoTotal").value);
+const feito = Number(document.getElementById("tempoFeito").value);
+
+if(!entrada || !saida || !musica || !total){
+alert("Preencha entrada, saída, música/clip e tempo total.");
+return;
+}
+
+let falta = total - feito;
+if(falta < 0){falta = 0;}
+
+let trabalhadoSeg = paradaCoreografia - inicioCoreografia;
+if(trabalhadoSeg < 0){trabalhadoSeg = 0;}
+
+const status = falta === 0 ? "Finalizada ✅" : "Em andamento ⚠️";
+
+ensaios.push({
+data,
+entrada,
+saida,
+musica,
+total,
+feito,
+falta,
+inicio: formatarTempo(inicioCoreografia),
+parada: formatarTempo(paradaCoreografia),
+trabalhado: formatarTempo(trabalhadoSeg),
+status
+});
+
+localStorage.setItem("ensaiosMaio2026Clip", JSON.stringify(ensaios));
+carregarTabela();
+}
+
+function carregarTabela(){
+const tabela = document.getElementById("tabela");
+tabela.innerHTML = "";
+
+let totalCoreografia = 0;
+let totalFeito = 0;
+let totalFalta = 0;
+
+ensaios.forEach((e,index)=>{
+totalCoreografia += Number(e.total);
+totalFeito += Number(e.feito);
+totalFalta += Number(e.falta);
+
+tabela.innerHTML += `
+<tr>
+<td>${e.data}</td>
+<td>${e.entrada}</td>
+<td>${e.saida}</td>
+<td>${e.musica}</td>
+<td>${e.total} min</td>
+<td class="ok">${e.feito} min</td>
+<td class="alerta">${e.falta} min</td>
+<td>${e.inicio}</td>
+<td>${e.parada}</td>
+<td class="amarelo">${e.trabalhado}</td>
+<td>${e.status}</td>
+<td><button onclick="apagar(${index})">Apagar</button></td>
+</tr>`;
+});
+
+document.getElementById("totalMusicas").innerText = ensaios.length;
+document.getElementById("totalCoreografia").innerText = totalCoreografia;
+document.getElementById("totalFeito").innerText = totalFeito;
+document.getElementById("totalFalta").innerText = totalFalta;
+}
+
+function apagar(index){
+ensaios.splice(index,1);
+localStorage.setItem("ensaiosMaio2026Clip", JSON.stringify(ensaios));
+carregarTabela();
+}
+
+function limparTudo(){
+if(confirm("Deseja apagar todo o histórico de ensaios?")){
+ensaios = [];
+localStorage.removeItem("ensaiosMaio2026Clip");
+carregarTabela();
+}
+}
+
+function formatarTempo(segundos){
+if(isNaN(segundos) || segundos === Infinity){return "00:00";}
+
+const min = Math.floor(segundos / 60);
+const seg = Math.floor(segundos % 60);
+
+return String(min).padStart(2,"0") + ":" + String(seg).padStart(2,"0");
+}
+
+carregarTabela();
+carregararcacaoM();
+atualizarContagem();
+atualizarAudioTela();
+</script>
+<hr>
+<a href="index01.controle_ensaios_musica_escalada.html"><h3>Controle de Ensaios - Música e Escalada</h3></a>
+</body>
+</html>

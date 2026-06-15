@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Controle de Ensaios - Jhonny Mendes</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:15px;background:linear-gradient(180deg,#000,#111);color:white;font-family:Arial,Helvetica,sans-serif;text-align:center}
+h1{color:#00ff66;margin-bottom:8px} h2{color:#00ff66}.card{background:#111;border:1px solid #00ff66;border-radius:14px;padding:15px;margin:14px auto;max-width:1100px;box-shadow:0 0 10px rgba(0,255,102,.25)}
+#relogio{font-size:30px;font-weight:bold;color:#00ff66;margin:10px 0}.alerta{margin:12px auto;padding:15px;border-radius:12px;border:2px solid #00ff66;font-size:20px;font-weight:bold;color:#00ff66;animation:piscar 1.2s infinite}@keyframes piscar{0%{opacity:1}50%{opacity:.65}100%{opacity:1}}
+input,textarea,button,select{width:95%;max-width:430px;padding:11px;margin:5px;border-radius:8px;border:none;font-size:15px}input,textarea,select{background:#f4f4f4;color:#000}textarea{height:70px;resize:vertical}button{background:#00aa44;color:white;font-weight:bold;cursor:pointer}button:hover{background:#00cc55}.btn-red{background:#aa0000}.btn-red:hover{background:#cc0000}.btn-blue{background:#005bbb}.btn-blue:hover{background:#0077ee}.btn-gold{background:#b8860b}.btn-gold:hover{background:#daa520}.btn-purple{background:#673ab7}.btn-purple:hover{background:#7e57c2}
+.resumo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px}.boxResumo{background:#050505;border:1px solid gold;border-radius:10px;padding:10px}.boxResumo strong{display:block;font-size:24px;color:#00ff66;margin-top:5px}
+table{width:100%;border-collapse:collapse;margin-top:15px;font-size:14px}th,td{border:1px solid #555;padding:8px;vertical-align:middle}th{background:#222;color:#00ff66}.pequeno{font-size:13px;color:#ccc}.ok{color:#00ff66;font-weight:bold}.gold{color:gold;font-weight:bold}.barra{background:#333;border-radius:20px;overflow:hidden;height:22px;min-width:100px}.progresso{height:100%;background:#00ff66;color:#000;font-weight:bold;font-size:12px;line-height:22px;min-width:28px}
+.linha-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;align-items:end}.linha-form input,.linha-form textarea,.linha-form select{width:100%;max-width:none}.scroll{overflow-x:auto}.tag{display:inline-block;background:#001f10;border:1px solid #00ff66;color:#00ff66;border-radius:20px;padding:5px 10px;margin:3px}.folderBox{background:#050505;border:1px dashed #00ff66;border-radius:10px;padding:12px;margin-top:10px}
+@media(max-width:600px){body{padding:10px}#relogio{font-size:22px}.alerta{font-size:16px}table{font-size:12px}th,td{padding:6px}input,textarea,button,select{font-size:14px;padding:10px}}
+@media print{button,input,textarea,select,.no-print{display:none!important}body{background:white;color:black}.card{background:white;color:black;border:1px solid black;box-shadow:none}h1,h2,h3,th{color:black}th{background:#eee}.ok,.gold{color:black}.alerta{border:1px solid black;color:black;animation:none}.barra{border:1px solid #000;background:white}.progresso{background:#ddd;color:black}.tag{border:1px solid #000;color:#000;background:white}}
+</style>
+</head>
+<body>
+<h1>🕺 Controle de Ensaios</h1>
+<p class="pequeno">Jhonny Mendes — presença, horas de ensaio, música escalada e andamento coreografado</p>
+
+<div class="card"><h2>Dançarino</h2><input id="dancarinoNome" type="text" value="Jhonny Mendes" oninput="salvarNome()"></div>
+
+<div class="card"><h2>Relógio em Tempo Real</h2><div id="relogio"></div><div class="alerta">🕺 ENSAIO DISPONÍVEL — REGISTRE MÚSICA, TEMPO E HORAS</div></div>
+
+<div class="card">
+<h2>✅ Registrar Presença</h2>
+<textarea id="observacaoPresenca" placeholder="Observação do ensaio ou presença"></textarea>
+<button onclick="registrarPresenca()">✅ Registrar Presença</button>
+</div>
+
+<div class="card"><h2>📊 Resumo Geral</h2><div class="resumo-grid" id="resumo"></div></div>
+
+<div class="card">
+<h2>📅 Horários Livres para Ensaios</h2>
+<p class="pequeno">Marque os dias disponíveis e salve os horários livres.</p>
+<div class="scroll"><table><thead><tr><th>Dia</th><th>Disponível</th><th>Início</th><th>Final</th><th>Observação</th></tr></thead><tbody id="agendaEnsaios"></tbody></table></div>
+<button onclick="salvarAgenda()">💾 Salvar Horários Livres</button>
+</div>
+
+<div class="card">
+<h2>🎼 Música Escalada para o Ensaio</h2>
+<p class="pequeno">Cadastre a música do ensaio, o tempo total, até onde foi coreografada e as horas feitas nesse ensaio.</p>
+<div class="linha-form no-print">
+<input type="date" id="escalaData">
+<input id="escalaMusica" placeholder="Música escalada: Shake Your Body">
+<input id="escalaTempoTotal" placeholder="Tempo total da música: 05:40">
+<input id="escalaTempoPercorrido" placeholder="Tempo percorrido/coreografado: 03:20">
+<input id="escalaHorasEnsaio" placeholder="Horas de ensaio feitas: 2:30">
+<select id="escalaStatus">
+<option value="Em andamento">Em andamento</option>
+<option value="Concluída">Concluída</option>
+<option value="Revisão">Revisão</option>
+<option value="Limpeza de movimento">Limpeza de movimento</option>
+</select>
+<textarea id="escalaObs" placeholder="Descrição: parte da música, contagem, marcação, dificuldade, o que falta"></textarea>
+</div>
+<button class="no-print" onclick="adicionarEscala()">💾 Salvar Música Escalada no Ensaio</button>
+<div class="scroll">
+<table>
+<thead><tr><th>Data</th><th>Música Escalada</th><th>Total</th><th>Percorrido/Coreografado</th><th>Falta</th><th>Horas do Ensaio</th><th>Status</th><th>Conclusão</th><th>Observação</th><th class="no-print">Ação</th></tr></thead>
+<tbody id="tabelaEscalas"></tbody>
+</table>
+</div>
+</div>
+
+<div class="card">
+<h2>🎵 Cadastro Geral das Músicas</h2>
+<div class="linha-form no-print"><input id="musicaNome" placeholder="Nome da música: Jam"><input id="musicaTotal" placeholder="Tempo total: 05:40"><input id="musicaFeito" placeholder="Tempo feito: 03:20"><textarea id="musicaObs" placeholder="Observação da coreografia"></textarea></div>
+<button class="no-print" onclick="adicionarMusica()">➕ Adicionar / Salvar Música</button>
+<div class="scroll"><table><thead><tr><th>Música</th><th>Tempo Total</th><th>Tempo Feito</th><th>Falta</th><th>Conclusão</th><th>Observação</th><th class="no-print">Ação</th></tr></thead><tbody id="tabelaMusicas"></tbody></table></div>
+</div>
+
+<div class="card">
+<h2>⏱️ Horas de Ensaio Realizadas</h2>
+<div class="linha-form no-print"><input type="date" id="horaData"><input id="horaFeita" placeholder="Horas feitas: 2:30 ou 2h"><textarea id="horaDesc" placeholder="Descrição: músicas ensaiadas, limpeza, marcação"></textarea></div>
+<button class="no-print" onclick="adicionarHora()">➕ Adicionar Horas</button>
+<div class="scroll"><table><thead><tr><th>Data</th><th>Horas Feitas</th><th>Descrição</th><th class="no-print">Ação</th></tr></thead><tbody id="tabelaHoras"></tbody></table></div>
+</div>
+
+<div class="card">
+<h2>📁 Salvar em Pasta no PC / Notebook</h2>
+<p class="pequeno">O navegador não cria pasta sozinho sem autorização. Clique no botão abaixo, escolha ou crie a pasta no seu computador e o programa salva um arquivo JSON com todo o histórico.</p>
+<div class="folderBox">
+<button class="btn-purple no-print" onclick="salvarNaPasta()">📁 Escolher Pasta e Salvar Histórico</button>
+<button class="btn-gold no-print" onclick="baixarBackup()">⬇️ Baixar Backup do Histórico</button>
+<button class="btn-blue no-print" onclick="window.print()">📄 Salvar / Imprimir em PDF</button>
+<p id="pastaStatus" class="pequeno">Nenhuma pasta escolhida ainda.</p>
+</div>
+</div>
+
+<div class="card">
+<h2>📌 Histórico de Presenças</h2>
+<button class="btn-red no-print" onclick="limparTudo()">🗑️ Limpar Histórico</button>
+<div class="scroll"><table><thead><tr><th>Data</th><th>Hora</th><th>Presença</th><th>Observação</th></tr></thead><tbody id="historicoTabela"></tbody></table></div>
+</div>
+
+<script>
+const K_NOME='jhonny_nome_dancarino_v2';
+const K_PRESENCA='jhonny_presencas_simples_v2', K_AGENDA='jhonny_agenda_ensaios_v2', K_MUSICAS='jhonny_musicas_v2', K_HORAS='jhonny_horas_ensaio_v2', K_ESCALAS='jhonny_musicas_escaladas_ensaio_v2';
+let presencas=JSON.parse(localStorage.getItem(K_PRESENCA))||[];
+let musicas=JSON.parse(localStorage.getItem(K_MUSICAS))||[];
+let horas=JSON.parse(localStorage.getItem(K_HORAS))||[];
+let escalas=JSON.parse(localStorage.getItem(K_ESCALAS))||[];
+const dias=['Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado','Domingo'];
+
+function dois(n){return String(n).padStart(2,'0')}
+function dataBR(d){return d.toLocaleDateString('pt-BR')}
+function horaBR(d){return dois(d.getHours())+':'+dois(d.getMinutes())}
+function hojeISO(){return new Date().toISOString().slice(0,10)}
+function dataISOparaBR(v){return v?String(v).split('-').reverse().join('/'):'-'}
+function atualizarRelogio(){const a=new Date();document.getElementById('relogio').innerHTML=dataBR(a)+' - '+a.toLocaleTimeString('pt-BR')} 
+setInterval(atualizarRelogio,1000); atualizarRelogio();
+
+function carregarNome(){document.getElementById('dancarinoNome').value=localStorage.getItem(K_NOME)||'Jhonny Mendes'}
+function salvarNome(){localStorage.setItem(K_NOME,document.getElementById('dancarinoNome').value.trim()||'Jhonny Mendes')}
+
+function parseTempo(txt){
+  if(!txt)return 0;
+  txt=String(txt).toLowerCase().trim().replace(' horas','h').replace(' hora','h').replace('minutos','min').replace('minuto','min');
+  txt=txt.replace('h',':').replace('min','').replace(',', '.');
+  let p=txt.split(':');
+  if(p.length===1)return Math.round(Number(p[0])*60)||0;
+  return (Number(p[0])||0)*60+(Number(p[1])||0);
+}
+function fmtTempo(min){min=Math.max(0,Math.round(min));return Math.floor(min/60)+':'+dois(min%60)}
+
+function registrarPresenca(){
+  const a=new Date();
+  presencas.push({data:dataBR(a),hora:horaBR(a),status:'✅ Presente',obs:document.getElementById('observacaoPresenca').value.trim()||'-'});
+  localStorage.setItem(K_PRESENCA,JSON.stringify(presencas));
+  document.getElementById('observacaoPresenca').value='';
+  render();
+}
+
+function montarAgenda(){
+  let salvo=JSON.parse(localStorage.getItem(K_AGENDA))||dias.map(d=>({dia:d,disp:false,inicio:'',fim:'',obs:''}));
+  document.getElementById('agendaEnsaios').innerHTML=salvo.map((i,idx)=>`<tr><td>${i.dia}</td><td><input type="checkbox" data-ag="disp" data-i="${idx}" ${i.disp?'checked':''}></td><td><input type="time" data-ag="inicio" data-i="${idx}" value="${i.inicio||''}"></td><td><input type="time" data-ag="fim" data-i="${idx}" value="${i.fim||''}"></td><td><input data-ag="obs" data-i="${idx}" value="${i.obs||''}" placeholder="Observação"></td></tr>`).join('')
+}
+function salvarAgenda(){
+  let linhas=[...document.querySelectorAll('#agendaEnsaios tr')];
+  let dados=linhas.map(l=>({dia:l.cells[0].innerText,disp:l.cells[1].querySelector('input').checked,inicio:l.cells[2].querySelector('input').value,fim:l.cells[3].querySelector('input').value,obs:l.cells[4].querySelector('input').value}));
+  localStorage.setItem(K_AGENDA,JSON.stringify(dados));
+  alert('Horários livres salvos!');
+}
+
+function adicionarEscala(){
+  let data=document.getElementById('escalaData').value||hojeISO();
+  let musica=document.getElementById('escalaMusica').value.trim();
+  let total=document.getElementById('escalaTempoTotal').value.trim();
+  let percorrido=document.getElementById('escalaTempoPercorrido').value.trim();
+  let horasEnsaio=document.getElementById('escalaHorasEnsaio').value.trim();
+  let status=document.getElementById('escalaStatus').value;
+  let obs=document.getElementById('escalaObs').value.trim()||'-';
+  if(!musica){alert('Digite a música escalada para o ensaio.');return}
+  if(!total){alert('Digite o tempo total da música.');return}
+  escalas.push({data:dataISOparaBR(data),musica,total,percorrido,horasEnsaio,status,obs,salvoEm:new Date().toLocaleString('pt-BR')});
+  localStorage.setItem(K_ESCALAS,JSON.stringify(escalas));
+
+  if(horasEnsaio){
+    horas.push({data:dataISOparaBR(data),feita:horasEnsaio,desc:'Música escalada: '+musica+' | Coreografado até: '+(percorrido||'0:00')+' | '+obs});
+    localStorage.setItem(K_HORAS,JSON.stringify(horas));
+  }
+
+  let idx=musicas.findIndex(m=>m.nome.toLowerCase()===musica.toLowerCase());
+  let item={nome:musica,total:total,feito:percorrido,obs:'Atualizado pela escala do ensaio em '+dataISOparaBR(data)+' — '+obs};
+  if(idx>=0)musicas[idx]=item; else musicas.push(item);
+  localStorage.setItem(K_MUSICAS,JSON.stringify(musicas));
+
+  ['escalaData','escalaMusica','escalaTempoTotal','escalaTempoPercorrido','escalaHorasEnsaio','escalaObs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('escalaStatus').value='Em andamento';
+  render();
+}
+function removerEscala(i){
+  if(confirm('Remover esta música escalada do histórico?')){
+    escalas.splice(i,1);
+    localStorage.setItem(K_ESCALAS,JSON.stringify(escalas));
+    render();
+  }
+}
+
+function adicionarMusica(){
+  let nome=document.getElementById('musicaNome').value.trim(); 
+  if(!nome){alert('Digite o nome da música.');return} 
+  let total=document.getElementById('musicaTotal').value.trim(), feito=document.getElementById('musicaFeito').value.trim(), obs=document.getElementById('musicaObs').value.trim(); 
+  let idx=musicas.findIndex(m=>m.nome.toLowerCase()===nome.toLowerCase()); 
+  let item={nome,total,feito,obs}; 
+  if(idx>=0)musicas[idx]=item; else musicas.push(item); 
+  localStorage.setItem(K_MUSICAS,JSON.stringify(musicas)); 
+  ['musicaNome','musicaTotal','musicaFeito','musicaObs'].forEach(id=>document.getElementById(id).value=''); 
+  render()
+}
+function removerMusica(i){if(confirm('Remover esta música?')){musicas.splice(i,1);localStorage.setItem(K_MUSICAS,JSON.stringify(musicas));render()}}
+
+function adicionarHora(){
+  let data=document.getElementById('horaData').value||hojeISO(); 
+  let feita=document.getElementById('horaFeita').value.trim(); 
+  if(!feita){alert('Digite as horas feitas.');return} 
+  let desc=document.getElementById('horaDesc').value.trim()||'-'; 
+  horas.push({data:dataISOparaBR(data),feita,desc}); 
+  localStorage.setItem(K_HORAS,JSON.stringify(horas)); 
+  ['horaData','horaFeita','horaDesc'].forEach(id=>document.getElementById(id).value=''); 
+  render()
+}
+function removerHora(i){if(confirm('Remover este registro de horas?')){horas.splice(i,1);localStorage.setItem(K_HORAS,JSON.stringify(horas));render()}}
+
+function renderEscalas(){
+  let tb=document.getElementById('tabelaEscalas');
+  if(!escalas.length){tb.innerHTML='<tr><td colspan="10">Nenhuma música escalada registrada.</td></tr>';return}
+  tb.innerHTML=escalas.map((e,i)=>{
+    let total=parseTempo(e.total), feito=parseTempo(e.percorrido), falta=Math.max(0,total-feito), perc=total?Math.min(100,Math.round((feito/total)*100)):0;
+    return `<tr><td>${e.data}</td><td class="gold">${e.musica}</td><td>${e.total||'0:00'}</td><td>${e.percorrido||'0:00'}</td><td>${fmtTempo(falta)}</td><td>${e.horasEnsaio||'0:00'}</td><td><span class="tag">${e.status}</span></td><td><div class="barra"><div class="progresso" style="width:${perc}%">${perc}%</div></div></td><td>${e.obs||'-'}<br><span class="pequeno">Salvo: ${e.salvoEm||'-'}</span></td><td class="no-print"><button class="btn-red" onclick="removerEscala(${i})">Excluir</button></td></tr>`
+  }).join('')
+}
+function renderMusicas(){
+  let tb=document.getElementById('tabelaMusicas'); 
+  if(!musicas.length){tb.innerHTML='<tr><td colspan="7">Nenhuma música cadastrada.</td></tr>';return} 
+  tb.innerHTML=musicas.map((m,i)=>{
+    let total=parseTempo(m.total),feito=parseTempo(m.feito),falta=Math.max(0,total-feito),perc=total?Math.min(100,Math.round((feito/total)*100)):0;
+    return `<tr><td>${m.nome}</td><td>${m.total||'0:00'}</td><td>${m.feito||'0:00'}</td><td>${fmtTempo(falta)}</td><td><div class="barra"><div class="progresso" style="width:${perc}%">${perc}%</div></div></td><td>${m.obs||'-'}</td><td class="no-print"><button class="btn-red" onclick="removerMusica(${i})">Excluir</button></td></tr>`
+  }).join('')
+}
+function renderHoras(){
+  let tb=document.getElementById('tabelaHoras'); 
+  if(!horas.length){tb.innerHTML='<tr><td colspan="4">Nenhuma hora de ensaio cadastrada.</td></tr>';return} 
+  tb.innerHTML=horas.map((h,i)=>`<tr><td>${h.data}</td><td>${h.feita}</td><td>${h.desc}</td><td class="no-print"><button class="btn-red" onclick="removerHora(${i})">Excluir</button></td></tr>`).join('')
+}
+function renderPresencas(){
+  let tb=document.getElementById('historicoTabela'); 
+  if(!presencas.length){tb.innerHTML='<tr><td colspan="4">Nenhuma presença registrada.</td></tr>';return} 
+  tb.innerHTML=presencas.map(p=>`<tr><td>${p.data}</td><td>${p.hora}</td><td class="ok">${p.status}</td><td>${p.obs}</td></tr>`).join('')
+}
+function atualizarResumo(){
+  let totalMin=horas.reduce((s,h)=>s+parseTempo(h.feita),0);
+  let totalEscalaMin=escalas.reduce((s,e)=>s+parseTempo(e.horasEnsaio),0);
+  let coreografadoMin=escalas.reduce((s,e)=>s+parseTempo(e.percorrido),0);
+  let concluidas=musicas.filter(m=>parseTempo(m.total)>0 && parseTempo(m.feito)>=parseTempo(m.total)).length;
+  let andamento=musicas.length-concluidas;
+  let diasUnicos=new Set(horas.map(h=>h.data)).size;
+  document.getElementById('resumo').innerHTML=`
+  <div class="boxResumo">Presenças<strong>${presencas.length}</strong></div>
+  <div class="boxResumo">Horas Ensaiadas<strong>${fmtTempo(totalMin)}</strong></div>
+  <div class="boxResumo">Horas por Escala<strong>${fmtTempo(totalEscalaMin)}</strong></div>
+  <div class="boxResumo">Tempo Coreografado<strong>${fmtTempo(coreografadoMin)}</strong></div>
+  <div class="boxResumo">Dias de Ensaio<strong>${diasUnicos}</strong></div>
+  <div class="boxResumo">Músicas Escaladas<strong>${escalas.length}</strong></div>
+  <div class="boxResumo">Músicas Concluídas<strong>${concluidas}</strong></div>
+  <div class="boxResumo">Músicas em Andamento<strong>${andamento}</strong></div>`
+}
+
+function pacoteDados(){
+  return {
+    programa:'Controle de Ensaios',
+    dancarino:document.getElementById('dancarinoNome').value,
+    exportadoEm:new Date().toLocaleString('pt-BR'),
+    presencas, agenda:JSON.parse(localStorage.getItem(K_AGENDA))||[], musicas, horas, musicasEscaladas:escalas
+  }
+}
+function nomeArquivo(){
+  let nome=(document.getElementById('dancarinoNome').value||'dancarino').replace(/[^a-z0-9]+/gi,'_').toLowerCase();
+  let data=new Date().toISOString().slice(0,10);
+  return `historico_ensaio_${nome}_${data}.json`;
+}
+async function salvarNaPasta(){
+  const status=document.getElementById('pastaStatus');
+  try{
+    if(!window.showDirectoryPicker){
+      status.innerText='Seu navegador não liberou escolha de pasta. Use o botão Baixar Backup.';
+      baixarBackup();
+      return;
+    }
+    const dirHandle=await window.showDirectoryPicker();
+    const fileHandle=await dirHandle.getFileHandle(nomeArquivo(),{create:true});
+    const writable=await fileHandle.createWritable();
+    await writable.write(JSON.stringify(pacoteDados(),null,2));
+    await writable.close();
+    status.innerText='✅ Histórico salvo na pasta escolhida: '+nomeArquivo();
+  }catch(e){
+    status.innerText='Salvamento cancelado ou bloqueado pelo navegador.';
+  }
+}
+function baixarBackup(){
+  const blob=new Blob([JSON.stringify(pacoteDados(),null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=nomeArquivo();
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(a.href);
+}
+function limparTudo(){
+  if(confirm('Deseja apagar presenças, músicas, escalas e horas salvas?')){
+    presencas=[];musicas=[];horas=[];escalas=[];
+    localStorage.removeItem(K_PRESENCA);localStorage.removeItem(K_MUSICAS);localStorage.removeItem(K_HORAS);localStorage.removeItem(K_ESCALAS);
+    render()
+  }
+}
+function render(){renderPresencas();renderEscalas();renderMusicas();renderHoras();atualizarResumo()}
+carregarNome(); montarAgenda(); render();
+</script>
+</body>
+</html>
